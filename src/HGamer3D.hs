@@ -91,12 +91,6 @@ runGame conf glf loopSleepTime = do
     let hg3d = HG3D ols cbs varExit
 
     forkIO $ do
-        -- create graphics system
-        eG3D <- newE hg3d [
-            ctGraphics3DConfig #: conf,
-            ctGraphics3DCommand #: NoCmd
-            ]
-
         ere <- newE hg3d [
             ctExitRequestedEvent #: ()
             ]
@@ -105,6 +99,12 @@ runGame conf glf loopSleepTime = do
         forkIO $ do
             registerReceiverCBS cbs ere ctExitRequestedEvent (\_ -> writeVar varExit True >> return ())
             forever $ (stepCBS cbs)
+
+        -- create graphics system
+        eG3D <- newE hg3d [
+            ctGraphics3DConfig #: conf,
+            ctGraphics3DCommand #: NoCmd
+            ]
 
         -- create game logic loop
         forkIO $ glf hg3d
