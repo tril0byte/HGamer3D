@@ -22,6 +22,7 @@
 #include "EntityIdCbor.hpp"
 #include "ParentCbor.hpp"
 
+#include "Graphics3DSystem.hpp"
 
 using namespace std;
 

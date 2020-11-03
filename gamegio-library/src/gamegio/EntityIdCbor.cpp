@@ -24,6 +24,34 @@ void writeEntityId(CborEncoder *enc, EntityId entityId)
     cbor_encode_byte_string(enc, entityId.data(), entityId.size());
 }
 
+void printEID(EntityId eid)
+{
+  for(int j = 0; j < 16; j++)
+    printf("%02X", eid[j]);
+  std::cout << "\n";
+}
+
+cbd::EntityId BufferToEntityId(PODVector<unsigned char> buf)
+{
+    cbd::EntityId eid;
+    PODVector<unsigned char>::Iterator element;
+    for (element = buf.Begin(); element != buf.End(); element++)
+    {
+      eid.push_back(*element); //cout << *element;
+    }
+    return eid;
+}
+
+PODVector<unsigned char> EntityIdToBuffer(cbd::EntityId eid)
+{
+  PODVector<unsigned char> buf; //construct Urho3D buffer
+  std::vector<uint8_t>::iterator index=eid.begin();
+  for (int i=0; i<16; i++)
+  {
+    buf.Push(*index++);
+  }
+  return buf;
+}
 
 } // end of namespacd cdb
 

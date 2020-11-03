@@ -46,6 +46,8 @@
 #include "MouseItem.hpp"
 #include "KeysItem.hpp"
 #include "ScreenModeItem.hpp"
+#include "HoverItem.hpp"
+#include "HoverCbor.hpp"
 
 #include "GUIElements.hpp"
 #include "ButtonCbor.hpp"
@@ -88,6 +90,7 @@ Library::Library()
     _factories[ctMouse] = new MouseItemFactory();
     _factories[ctKeyEvent] = new KeysItemFactory();
     _factories[ctScreenModeEvent] = new ScreenModeItemFactory();
+    _factories[ctHoverEvent] = new HoverItemFactory();
 }
 
 Library::~Library()
@@ -150,6 +153,7 @@ void gioRegisterMsgReceiver(FrItemType ctItem, FrEventType ctEvent, FrItem item,
     GIO_REG_EVENT(DropDownListItem, DropDownList, DropDownList)
     GIO_REG_EVENT(Joystick, Joystick, JoystickEvent)
     GIO_REG_EVENT(ExitRequestedItem, ExitRequestedEvent, ExitRequestedEvent)
+    GIO_REG_EVENT(HoverItem, HoverEvent, HoverEvent)
 
     // old input event handler, deprecated, compatibility mode
     GIO_REG_EVENT(IEHClass, InputEventHandler, MouseEvent090)

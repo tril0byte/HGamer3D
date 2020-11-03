@@ -23,6 +23,7 @@
 #include "EntityIdCbor.hpp"
 #include "ParentCbor.hpp"
 #include "VisibleCbor.hpp"
+#include "HoverItem.hpp"
 
 using namespace std;
 using namespace cbd;
@@ -98,13 +99,6 @@ void HasNode::msgScale(FrMsg m, FrMsgLength l)
   node->SetScale(Vector3(vec.x, vec.y, vec.z));
 };
 
-void printEID(EntityId eid)
-{
-  for(int j = 0; j < 16; j++)
-    printf("%02X", eid[j]);
-  cout << "\n";
-}
-
 void HasNode::msgParent(FrMsg m, FrMsgLength l)
 {
   CborParser parser; CborValue it;
@@ -140,8 +134,23 @@ void HasNode::msgEntityId(FrMsg m, FrMsgLength l)
   readEntityId(&it, &eid);
 //  std::cout << "HasNode - set id: ";
 //  printEID(eid);
+//  std::cout << "\n";
 
   Graphics3DSystem::getG3DS()->node_map[eid] = node;
+
+  /* Setting the entity ID into the node as a Var
+     so that it can be retrieved from clicks (raycast) */
+  // First Convert EID into a Urho3D buffer, PODVector<unsigned char>
+
+  PODVector<unsigned char> buf = EntityIdToBuffer(eid);
+
+  EntityId duplicateEntity = BufferToEntityId(buf);
+//  std::cout << "HasNode - Backconverted: ";
+//  printEID(duplicateEntity);
+//  std::cout << "\n";
+
+  node->SetVar(StringHash(HOVER_ENTITY_HASHKEY), buf);
+  //  cout << "HasNode - SetVar a buf with Size=" << buf.Size() << "\n";
 }
 
 void HasNode::msgVisible(FrMsg m, FrMsgLength l)

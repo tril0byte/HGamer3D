@@ -19,6 +19,7 @@ using namespace std;
 
 #include "Fresco.hpp"
 #include "Graphics3DSystem.hpp"
+#include "EntityIdCbor.hpp"
 
 #include "Graphics3DConfigCbor.hpp"
 #include "Graphics3DCommandCbor.hpp"
@@ -206,6 +207,19 @@ FrItem Graphics3DSystem::msgCreate(FrMsg m, FrMsgLength l)
   return (void *)g3ds;
 }
 
+void Graphics3DSystem::dumpEntities()
+{
+  std::map<cbd::EntityId, Node*>::iterator i;
+  for (i = node_map.begin(); i != node_map.end(); i++)
+  {
+    cout << "Graphics3DSystem - dumpEntities: EID: ";
+    printEID(i->first);
+    cout << "Second: " << i->second << "\n";
+    //cout << msg;
+    //URHO3D_LOGRAW(msg + "\n");
+  }
+}
+
 void Graphics3DSystem::msgCommand(FrMsg m, FrMsgLength l)
 {
     // read message data
@@ -213,7 +227,7 @@ void Graphics3DSystem::msgCommand(FrMsg m, FrMsgLength l)
     cbor_parser_init(m, l, 0, &parser, &it);
     Graphics3DCommand command;
     readGraphics3DCommand(&it, &command);
-
+    //    dumpEntities();
     if (command.selector == Step)
     {
         if (!engine->IsExiting())

@@ -45,6 +45,8 @@ public:
 
   // messages
   void msgCommand(FrMsg m, FrMsgLength l);
+
+  void dumpEntities();
 };
 
 

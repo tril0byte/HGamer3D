@@ -11,8 +11,11 @@
 #define __EntityId_cbor__
 
 #include <vector>
+#include <iostream>
 #include "cbor.h"
 #include "cborconstants_p.h"
+#include <Urho3D/Urho3DAll.h>
+
 
 namespace cbd {
 
@@ -20,6 +23,10 @@ typedef std::vector<uint8_t> EntityId;
 
 void readEntityId(CborValue *it, EntityId *entityId);
 void writeEntityId(CborEncoder *enc, EntityId entityId);
+
+void printEID(EntityId eid);
+cbd::EntityId BufferToEntityId(Urho3D::PODVector<unsigned char> buf);
+Urho3D::PODVector<unsigned char> EntityIdToBuffer(cbd::EntityId eid);
 
 } // end of namespacd cdb
 

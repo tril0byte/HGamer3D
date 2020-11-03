@@ -120,6 +120,8 @@ set(CPP_SRCS
     gamegio/MouseItem.cpp
     gamegio/KeysItem.cpp
     gamegio/ScreenModeItem.cpp
+    gamegio/HoverItem.cpp
+    gamegio/HoverCbor.cpp
 )
 
 set(CBOR_SRCS
