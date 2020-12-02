@@ -261,6 +261,8 @@ FrItem EditTextItem::msgCreate(FrMsg m, FrMsgLength l)
     EditTextItem *item = new EditTextItem();
     UI* ui = item->g->context->GetSubsystem<UI>();
     item->edittext = new LineEdit2(item->g->context);
+    item->edittext->SetMaxLength(maxTextLength);
+    item->edittext->SetFocus(true);
     item->uiElement.StaticCast(item->edittext);
     ui->GetRoot()->AddChild(item->edittext);
     item->edittext->SetStyleAuto();
@@ -312,7 +314,7 @@ void EditTextItem::HandleTextChanged (StringHash eventType, VariantMap& eventDat
         cbor_encoder_init(&encoder, buf, sizeof(buf), 0);
 
         cbd::EditText etevt;
-        etevt = str.CString();;
+        etevt = str.CString();
         cbd::writeEditText(&encoder, etevt);
 
         size_t len = cbor_encoder_get_buffer_size(&encoder, buf);

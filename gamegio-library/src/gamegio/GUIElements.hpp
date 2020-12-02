@@ -106,6 +106,9 @@ class EditTextItem : public HasUIElement, public Object {
 
 URHO3D_OBJECT(EditTextItem, Object);
 
+private:
+    static const unsigned maxTextLength = 62;
+
 protected:
     SharedPtr<LineEdit2> edittext;
     FrMessageFn2 callbackF;
