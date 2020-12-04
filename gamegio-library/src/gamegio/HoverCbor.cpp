@@ -35,3 +35,4 @@ void writeHoverEvent(CborEncoder *enc0, HoverEvent hoverEvent)
 
 const uint64_t ctHoverCamera = 0xc9947e814b1f9b89;
 const uint64_t ctHoverEvent = 0x76492fa6aa357311;
+const uint64_t ctHoverMode = 0x7ba50d9aa1400198;

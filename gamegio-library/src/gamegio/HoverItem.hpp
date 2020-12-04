@@ -22,6 +22,8 @@ using namespace Urho3D;
 // declares extern C wrapper function for C++ method
 GIO_METHOD_DEC(HoverItem, HoverCamera)
 GIO_METHOD_DEC(HoverItem, HoverEvent)
+GIO_METHOD_DEC(HoverItem, HoverMode)
+GIO_METHOD_DEC(HoverItem, DragVector)
 // declares class CNAMEFactory
 GCO_FACTORY_DEC(HoverItem)
 
@@ -30,8 +32,11 @@ class HoverItem : public Object {
 URHO3D_OBJECT(HoverItem, Object);
 
 private:
-  cbd::EntityId hoverEntity;
-  Camera* camera;
+  cbd::EntityId hoverEntity; // current EID hovered over
+  Camera* camera; // the screen we are looking from. required for hover and drag
+  Vector3 hoverHitPosition; // constantly update during Hovering mode
+  cbd::EnumHoverMode hoverMode; // default is Hovering. May also be dragging.
+  Vector3 dragStartPosition; // cached upon start of dragging.
 
   // interface for Fresco callback
   FrMessageFn2 hoverEventF;
@@ -39,6 +44,8 @@ private:
   uint64_t hoverEventType;
 
   bool CompareEntities(cbd::EntityId* a, cbd::EntityId* b);
+  void HandleHovering(StringHash eventType, VariantMap& eventData);
+  void HandleDragging(StringHash eventType, VariantMap& eventData);
 
 public:
   HoverItem();
@@ -46,11 +53,12 @@ public:
   static FrItem msgCreate(FrMsg m, FrMsgLength l);
   void msgHoverCamera(FrMsg m, FrMsgLength l);
   void msgHoverEvent(FrMsg m, FrMsgLength l);
+  void msgHoverMode(FrMsg m, FrMsgLength l);
+  void msgDragVector(FrMsg m, FrMsgLength l);
   void virtual msgDestroy();
 
   void registerHoverEventFunction(FrMessageFn2 f, void* p2, uint64_t hoverET);
   void HandleMouseMove(StringHash eventType, VariantMap& eventData);
-
 };
 
 #endif

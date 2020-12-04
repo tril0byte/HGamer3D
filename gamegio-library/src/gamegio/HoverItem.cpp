@@ -19,15 +19,22 @@ using namespace cbd;
 // Called when a value is assigned to the component
 GIO_METHOD_FUNC(HoverItem, HoverCamera)
 GIO_METHOD_FUNC(HoverItem, HoverEvent)
+GIO_METHOD_FUNC(HoverItem, HoverMode)
 
 // defines CNAMEFactory class
 GCO_FACTORY_IMP(HoverItem)
 // performs component type checking, then invokes the method
   GCO_FACTORY_METHOD(HoverItem, ctHoverCamera, HoverCamera)
   GCO_FACTORY_METHOD(HoverItem, ctHoverEvent, HoverEvent)
+  GCO_FACTORY_METHOD(HoverItem, ctHoverMode, HoverMode)
 GCO_FACTORY_IMP_END
 
-HoverItem::HoverItem() : Object(Graphics3DSystem::getG3DS()->context), camera(NULL), hoverEventF(NULL)
+HoverItem::HoverItem() : Object(Graphics3DSystem::getG3DS()->context),
+  camera(NULL),
+  hoverEventF(NULL),
+  hoverHitPosition(Vector3()),
+  hoverMode(Hovering),
+  dragStartPosition(Vector3())
 {
 }
 
@@ -75,10 +82,18 @@ void HoverItem::msgHoverCamera(FrMsg m, FrMsgLength l)
 
 void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
 {
-    const float maxDistance = 250.0f;
-
-    if (NULL == camera)
+    if (NULL == camera) // need a camera for both hover and drag
         return;
+
+    if (Hovering == hoverMode)
+        HandleHovering(eventType, eventData);
+    else
+	HandleDragging(eventType, eventData);
+}
+
+void HoverItem::HandleHovering(StringHash eventType, VariantMap& eventData)
+{
+    const float maxDistance = 250.0f;
 
     Graphics3DSystem *g3ds = Graphics3DSystem::getG3DS();
     Context *context = g3ds->context;
@@ -126,6 +141,10 @@ void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
     Node* hitNode = result.node_;
     if (NULL == hitNode)
       return;
+
+    // Update hit position (needed as soon as we start dragging)
+    hoverHitPosition = result.position_;
+
     // Read back the EntityId that was saved in HasNode.cpp - HasNode::msgEntityId()
     // just after the node was created
     PODVector<unsigned char> buf = hitNode->GetVar(StringHash(HOVER_ENTITY_HASHKEY)).GetBuffer();
@@ -136,6 +155,7 @@ void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
       return;
     cout << "HoverItem::HandleMouseMove over a new entity: ";
     printEID(eid);
+    cout << "drawable distance: " << result.drawable_->GetDrawDistance();
     // Over new entity, update stored EID
     hoverEntity = eid;
     // Trigger hover entity changed event
@@ -157,6 +177,11 @@ void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
 	cout << "HoverItem::HandleMouseMove returned from callback and buffer len was " << len << "\n";
 	cout << "HoverItem::HandleMouseMove - entity id length = " << eid.size() << "\n";
     }
+}
+
+void HoverItem::HandleDragging(StringHash eventType, VariantMap& eventData)
+{
+
 }
 
 bool HoverItem::CompareEntities(cbd::EntityId *a, cbd::EntityId *b)
@@ -194,4 +219,13 @@ void HoverItem::registerHoverEventFunction(FrMessageFn2 f, void* p2, uint64_t ho
     hoverDataP = p2;
     hoverEventType = hoverET;
     cout << "registered hover event function " << f << "\n";
+}
+
+void HoverItem::msgHoverMode(FrMsg m, FrMsgLength l)
+{
+  // switch mode. we may want to allow messaging Drag even when dragging
+  // to force updating the vector when mouse is not moving (e.g. from keyboard moving/turning)
+  // save current ray hit position into a local member variable as "startDragLocation"
+  // set mode local member variable to
+
 }

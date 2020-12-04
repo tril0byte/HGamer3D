@@ -19,14 +19,25 @@ namespace cbd {
     } data;
   } HoverEvent;
 
-
   void readHoverEvent(CborValue *it0, HoverEvent *hoverEvent);
   void writeHoverEvent(CborEncoder *enc0, HoverEvent hoverEvent);
 
+  typedef enum {
+    Hovering = 0,
+    Dragging = 1,
+  } EnumHoverMode;
+
+  /*  typedef struct {
+    EnumHoverMode mode;
+    } HoverMode;*/
+
+  void readHoverMode(CborValue *it0, EnumHoverMode *hoverMode);
+  void writeHoverMode(CborEncoder *enc0, EnumHoverMode hoverMode);
 }
 
 extern const uint64_t ctHoverCamera;
 extern const uint64_t ctHoverEvent;
+extern const uint64_t ctHoverMode;
 
 #endif
 

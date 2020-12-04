@@ -4,6 +4,7 @@ where
 
 import Fresco
 import Data.ByteString
+import Data.Vect.Float.Base
 
 import Data.Binary.Serialise.CBOR
 import Data.Binary.Serialise.CBOR.Encoding
@@ -39,3 +40,16 @@ instance Serialise (HoverEvent) where
         entityId <- decode
         return $ HoverEvent (Just entityId)
 
+-- | Hover Mode defaults to Hover.
+-- Set it to Drag when beginning to drag the item.
+-- Set it back to Hover when completing the drag.
+ctHoverMode :: ComponentType HoverMode
+ctHoverMode = ComponentType 0x7ba50d9aa1400198
+
+data HoverMode = Hover | Drag
+  deriving (Eq, Ord, Show)
+
+-- When in Drag mode, the component updates with the relative world coordinates.
+-- Vector from object's original (current) position to where it's been dragged so far.
+ctDragVector :: ComponentType Vec3
+ctDragVector = ComponentType 0xb292cb6a4b805d19
