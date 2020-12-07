@@ -132,13 +132,14 @@ void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
     // Read stored HGamer3D EntityId out of the Urho3D Node 
     // so we can see what upper layer entity the Ray has hit 
     cbd::EntityId eid = BufferToEntityId(buf); 
-    if (eid == hoverEntity) // still over same entity
-      return;
-    cout << "HoverItem::HandleMouseMove over a new entity: ";
-    printEID(eid);
-    // Over new entity, update stored EID
-    hoverEntity = eid;
-    // Trigger hover entity changed event
+    if (eid != hoverEntity)
+    {
+      // Over new entity, update stored EID
+      hoverEntity = eid;
+      cout << "HoverItem::HandleMouseMove over a new entity: ";
+      printEID(eid);
+    }
+    // Trigger hover entity changed event - now done even when over same entity, to update hit position.
     if (hoverEventF != NULL)
     {
 	uint8_t buf[64];
@@ -148,6 +149,9 @@ void HoverItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
 	cbd::HoverEvent hev;
         hev.selector = JustEntity;
         hev.data.HoverEntity.value0 = eid;
+        hev.data.HoverEntity.value1.x = result.position_.x_;
+        hev.data.HoverEntity.value1.y = result.position_.y_;
+        hev.data.HoverEntity.value1.z = result.position_.z_;
 	cbd::writeHoverEvent(&encoder, hev);
 
 	size_t len = cbor_encoder_get_buffer_size(&encoder, buf);

@@ -122,6 +122,7 @@ set(CPP_SRCS
     gamegio/ScreenModeItem.cpp
     gamegio/HoverItem.cpp
     gamegio/HoverCbor.cpp
+    gamegio/DragItem.cpp
 )
 
 set(CBOR_SRCS

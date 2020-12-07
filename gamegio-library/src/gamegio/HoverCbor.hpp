@@ -2,6 +2,7 @@
 #define __Hover_cbor__
 
 #include "EntityIdCbor.hpp"
+#include "Vec3Cbor.hpp"
 
 namespace cbd {
 
@@ -15,6 +16,7 @@ namespace cbd {
     struct {
       struct {
         EntityId value0;
+        Position value1; // in Vec3Cbor. hit position.
       } HoverEntity;
     } data;
   } HoverEvent;

@@ -48,6 +48,7 @@
 #include "ScreenModeItem.hpp"
 #include "HoverItem.hpp"
 #include "HoverCbor.hpp"
+#include "DragItem.hpp"
 
 #include "GUIElements.hpp"
 #include "ButtonCbor.hpp"
@@ -91,6 +92,7 @@ Library::Library()
     _factories[ctKeyEvent] = new KeysItemFactory();
     _factories[ctScreenModeEvent] = new ScreenModeItemFactory();
     _factories[ctHoverEvent] = new HoverItemFactory();
+    _factories[ctDragEvent] = new DragItemFactory();
 }
 
 Library::~Library()
@@ -154,6 +156,7 @@ void gioRegisterMsgReceiver(FrItemType ctItem, FrEventType ctEvent, FrItem item,
     GIO_REG_EVENT(Joystick, Joystick, JoystickEvent)
     GIO_REG_EVENT(ExitRequestedItem, ExitRequestedEvent, ExitRequestedEvent)
     GIO_REG_EVENT(HoverItem, HoverEvent, HoverEvent)
+    GIO_REG_EVENT(DragItem, DragEvent, DragEvent)
 
     // old input event handler, deprecated, compatibility mode
     GIO_REG_EVENT(IEHClass, InputEventHandler, MouseEvent090)

@@ -11,6 +11,7 @@ void readHoverEvent(CborValue *it0, HoverEvent *hoverEvent)
   };
   if (hoverEvent->selector == 1) {
     readEntityId(it, &(hoverEvent->data.HoverEntity.value0));
+    readPosition(it, &(hoverEvent->data.HoverEntity.value1));
   };
   cbor_value_leave_container(it0, it);
 }
@@ -24,9 +25,10 @@ void writeHoverEvent(CborEncoder *enc0, HoverEvent hoverEvent)
     cbor_encoder_close_container_checked(enc0, enc);
   };
   if (hoverEvent.selector == 1) {
-    CborEncoder enc1; CborEncoder* enc = &enc1; cbor_encoder_create_array(enc0, enc, 2);
+    CborEncoder enc1; CborEncoder* enc = &enc1; cbor_encoder_create_array(enc0, enc, 3);
     cbor_encode_uint(enc, (uint64_t)hoverEvent.selector);
     writeEntityId(enc, hoverEvent.data.HoverEntity.value0);
+    writePosition(enc, hoverEvent.data.HoverEntity.value1);
     cbor_encoder_close_container_checked(enc0, enc);
   };
 }
