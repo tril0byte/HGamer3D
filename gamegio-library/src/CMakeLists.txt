@@ -123,6 +123,7 @@ set(CPP_SRCS
     gamegio/HoverItem.cpp
     gamegio/HoverCbor.cpp
     gamegio/DragItem.cpp
+    gamegio/DragCbor.cpp
 )
 
 set(CBOR_SRCS

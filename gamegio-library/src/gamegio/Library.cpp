@@ -49,6 +49,7 @@
 #include "HoverItem.hpp"
 #include "HoverCbor.hpp"
 #include "DragItem.hpp"
+#include "DragCbor.hpp"
 
 #include "GUIElements.hpp"
 #include "ButtonCbor.hpp"

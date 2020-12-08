@@ -26,10 +26,6 @@ GCO_FACTORY_IMP(DragItem)
   GCO_FACTORY_METHOD(DragItem, ctDragEvent, DragEvent)
 GCO_FACTORY_IMP_END
 
-const uint64_t ctDragCamera = 0x87c2f05611cb2d50;
-const uint64_t ctDragHitPosition = 0x3fd1f759fcea70b4;
-const uint64_t ctDragEvent = 0xa855430c4f4b1212;
-
 // DragItem is a transitory entity that only exists during a drag;
 // the drag starts when it is created and ends when it's deleted.
 // Caller determines when to start/end drag.
@@ -75,8 +71,6 @@ void DragItem::msgDragHitPosition(FrMsg m, FrMsgLength l)
 
 void DragItem::msgDragCamera(FrMsg m, FrMsgLength l)
 {
-  if (camera != NULL)
-    return;
   CborParser parser; CborValue it;
   cbor_parser_init(m, l, 0, &parser, &it);
   EntityId cameraId;
@@ -90,6 +84,30 @@ void DragItem::msgDragCamera(FrMsg m, FrMsgLength l)
     camera = newCamera->second->GetComponent<Camera>();
 
     SubscribeToEvent(E_MOUSEMOVE, URHO3D_HANDLER(DragItem, HandleMouseMove));
+  }
+  else
+  {
+    /* Treating a non-camera-containing entity as a Drag End Request
+       Disabling the camera will disable the existing mouse move handler until we can unsubscribe,
+       which we do immediately. Then, send a Fresco event to ctDragEvent indicating we shut down.
+       This will run the shutdown sequence through the same Fresco event queue that the drags
+       are going through, to make sure we only shut down after the last drag event. */
+    camera = NULL;
+    UnsubscribeFromEvent(E_MOUSEMOVE);
+
+    if (dragEventF != NULL)
+    {
+        uint8_t buf[64];
+        CborEncoder encoder;
+        cbor_encoder_init(&encoder, buf, sizeof(buf), 0);
+
+	cbd::DragEvent dev;
+        dev.selector = DragEnding;
+	cbd::writeDragEvent(&encoder, dev);
+
+        size_t len = cbor_encoder_get_buffer_size(&encoder, buf);
+        dragEventF(dragDataP, dragEventType, buf, len);
+    }
   }
 }
 
@@ -124,7 +142,12 @@ void DragItem::HandleMouseMove(StringHash eventType, VariantMap& eventData)
     uint8_t buf[64];
     CborEncoder encoder;
     cbor_encoder_init(&encoder, buf, sizeof(buf), 0);
-    cbd::writePosition(&encoder, newPosition); // in Vec3Cbor
+
+    cbd::DragEvent dev;
+    dev.selector = DragActive;
+    dev.data.DragPosition.value0 = newPosition;
+    cbd::writeDragEvent(&encoder, dev);
+
     size_t len = cbor_encoder_get_buffer_size(&encoder, buf);
     dragEventF(dragDataP, dragEventType, buf, len);
   }

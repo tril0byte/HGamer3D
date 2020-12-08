@@ -11,8 +11,7 @@
 
 #include "Fresco.hpp"
 #include "Graphics3DSystem.hpp"
-#include "Vec3Cbor.hpp"
-#include "EntityIdCbor.hpp"
+#include "DragCbor.hpp"
 
 using namespace Urho3D;
 
@@ -48,9 +47,5 @@ public:
   void HandleMouseMove(StringHash eventType, VariantMap& eventData);
 
 };
-
-extern const uint64_t ctDragHitPosition;
-extern const uint64_t ctDragCamera;
-extern const uint64_t ctDragEvent;
 
 #endif
