@@ -101,9 +101,9 @@ void DragItem::msgDragCamera(FrMsg m, FrMsgLength l)
         CborEncoder encoder;
         cbor_encoder_init(&encoder, buf, sizeof(buf), 0);
 
-	cbd::DragEvent dev;
+        cbd::DragEvent dev;
         dev.selector = DragEnding;
-	cbd::writeDragEvent(&encoder, dev);
+        cbd::writeDragEvent(&encoder, dev);
 
         size_t len = cbor_encoder_get_buffer_size(&encoder, buf);
         dragEventF(dragDataP, dragEventType, buf, len);
