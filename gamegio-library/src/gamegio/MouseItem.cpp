@@ -110,9 +110,9 @@ void MouseItem::HandleMouseButtonDown(StringHash eventType, VariantMap& eventDat
     cbd::MouseEvent mevt;
 
     mevt.selector = cbd::MouseButtonDownEvent;
-    mevt.data.MouseButtonUpEvent.value0.button = eventData[MouseButtonUp::P_BUTTON].GetInt();
-    mevt.data.MouseButtonUpEvent.value0.buttons = eventData[MouseButtonUp::P_BUTTONS].GetInt();
-    mevt.data.MouseButtonUpEvent.value0.qualifiers = eventData[MouseButtonUp::P_QUALIFIERS].GetInt();
+    mevt.data.MouseButtonDownEvent.value0.button = eventData[MouseButtonDown::P_BUTTON].GetInt();
+    mevt.data.MouseButtonDownEvent.value0.buttons = eventData[MouseButtonDown::P_BUTTONS].GetInt();
+    mevt.data.MouseButtonDownEvent.value0.qualifiers = eventData[MouseButtonDown::P_QUALIFIERS].GetInt();
 
     writeMouseEvent(&encoder, mevt);
     size_t len = cbor_encoder_get_buffer_size(&encoder, buf);
