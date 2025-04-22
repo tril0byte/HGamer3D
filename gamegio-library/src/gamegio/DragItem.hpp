@@ -45,6 +45,7 @@ public:
 
   void registerDragEventFunction(FrMessageFn2 f, void* p2, uint64_t dragET);
   void HandleMouseMove(StringHash eventType, VariantMap& eventData);
+  void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData); // Debug Geometry
 
 };
 

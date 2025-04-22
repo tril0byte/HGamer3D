@@ -84,6 +84,10 @@ void DragItem::msgDragCamera(FrMsg m, FrMsgLength l)
     camera = newCamera->second->GetComponent<Camera>();
 
     SubscribeToEvent(E_MOUSEMOVE, URHO3D_HANDLER(DragItem, HandleMouseMove));
+
+    // Subscribe HandlePostRenderUpdate() function for processing the post-render update event, during which we request
+    // debug geometry
+    SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(DragItem, HandlePostRenderUpdate));
   }
   else
   {
@@ -164,4 +168,12 @@ void DragItem::registerDragEventFunction(FrMessageFn2 f, void* p2, uint64_t drag
     dragDataP = p2;
     dragEventType = dragET;
     cout << "registered drag event function " << f << "\n";
+}
+
+
+void DragItem::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
+{
+  // If draw debug mode is enabled, draw viewport debug geometry. Disable depth test so that we can see the effect of occlusion
+  //if (drawDebug_)
+  Graphics3DSystem::getG3DS()->context->GetSubsystem<Renderer>()->DrawDebugGeometry(false);
 }

@@ -177,6 +177,7 @@ FrItem Graphics3DSystem::msgCreate(FrMsg m, FrMsgLength l)
   g3ds->engine->SetAutoExit(false);
   g3ds->scene = new Scene(g3ds->context);
   g3ds->scene->CreateComponent<Octree>();
+  g3ds->scene->CreateComponent<DebugRenderer>();
   
   // Enable OS cursor
   g3ds->context->GetSubsystem<Input>()->SetMouseVisible(true);

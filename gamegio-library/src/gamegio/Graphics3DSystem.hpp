@@ -47,6 +47,7 @@ public:
   void msgCommand(FrMsg m, FrMsgLength l);
 
   void dumpEntities();
+  void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData); // Debug Geometry
 };
 
 
